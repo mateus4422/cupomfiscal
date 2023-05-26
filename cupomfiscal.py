@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import requests
+import selenium.common.exceptions
 
 
 def main():
@@ -14,36 +15,36 @@ def main():
 def abrir_site(chave_acesso):
     chrome_options = Options()
     chrome_options.add_argument("--ignore-certificate-errors")  # Ignorar erros de certificado
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-chrome")
 
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://satsp.fazenda.sp.gov.br/COMSAT/Public/ConsultaPublica/ConsultaPublicaCfe.aspx")
+    try:
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get("https://satsp.fazenda.sp.gov.br/COMSAT/Public/ConsultaPublica/ConsultaPublicaCfe.aspx")
 
-    campo_chave = driver.find_element(By.ID, "conteudo_txtChaveAcesso")
-    campo_chave.clear()
-    campo_chave.send_keys(chave_acesso)
+        campo_chave = driver.find_element(By.ID, "conteudo_txtChaveAcesso")
+        campo_chave.clear()
+        campo_chave.send_keys(chave_acesso)
 
-    # Clicar no elemento do captcha
-    captcha_checkbox = driver.find_element(By.ID, "recaptcha-anchor")
-    captcha_checkbox.click()
+        # Clicar no elemento do captcha
+        captcha_checkbox = driver.find_element(By.ID, "recaptcha-anchor")
+        captcha_checkbox.click()
 
-    # Resolver o captcha usando a API Buster
-    captcha_img = driver.find_element(By.ID, "conteudo_imgCaptcha")
-    captcha_base64 = captcha_img.get_attribute("src").split(",")[-1]
-    captcha_text = resolver_captcha_buster(captcha_base64)
+        # Resolver o captcha usando a API Buster
+        captcha_img = driver.find_element(By.ID, "conteudo_imgCaptcha")
+        captcha_base64 = captcha_img.get_attribute("src").split(",")[-1]
+        captcha_text = resolver_captcha_buster(captcha_base64)
 
-    # Preencher o campo do captcha com o texto resolvido
-    campo_captcha = driver.find_element(By.ID, "conteudo_txtTexto_captcha_serpro_gov_br")
-    campo_captcha.clear()
-    campo_captcha.send_keys(captcha_text)
+        # Preencher o campo do captcha com o texto resolvido
+        campo_captcha = driver.find_element(By.ID, "conteudo_txtTexto_captcha_serpro_gov_br")
+        campo_captcha.clear()
+        campo_captcha.send_keys(captcha_text)
 
-    # Outras ações necessárias, como clicar em botões ou submeter o formulário
-    # ...
+        # Outras ações necessárias, como clicar em botões ou submeter o formulário
+        # ...
 
-    # Encerrar o driver
-    driver.quit()
+        driver.quit()
+
+    except selenium.common.exceptions.WebDriverException:
+        st.error("Ocorreu um erro ao abrir o site. Por favor, tente novamente.")
 
 
 def resolver_captcha_buster(captcha_base64):
