@@ -12,8 +12,7 @@ def main():
 def abrir_site(chave_acesso):
     chrome_options = Options()
     chrome_options.add_argument("--ignore-certificate-errors")  # Ignorar erros de certificado
-    # Substitua o caminho abaixo pelo caminho do executável do ChromeDriver em seu sistema
-    driver = webdriver.Chrome(executable_path="/caminho/para/chromedriver", options=chrome_options)
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://satsp.fazenda.sp.gov.br/COMSAT/Public/ConsultaPublica/ConsultaPublicaCfe.aspx")
 
     campo_chave = driver.find_element(By.ID, "conteudo_txtChaveAcesso")
