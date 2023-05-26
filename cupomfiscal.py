@@ -2,19 +2,18 @@ import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 import requests
-
 
 def main():
     chave_acesso = st.text_input("Digite a chave de acesso:")
     if st.button("Visualizar"):
         abrir_site(chave_acesso)
 
-
 def abrir_site(chave_acesso):
     chrome_options = Options()
     chrome_options.add_argument("--ignore-certificate-errors")  # Ignorar erros de certificado
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
     driver.get("https://satsp.fazenda.sp.gov.br/COMSAT/Public/ConsultaPublica/ConsultaPublicaCfe.aspx")
 
     campo_chave = driver.find_element(By.ID, "conteudo_txtChaveAcesso")
@@ -41,7 +40,6 @@ def abrir_site(chave_acesso):
     # Encerrar o driver
     driver.quit()
 
-
 def resolver_captcha_buster(captcha_base64):
     # Substitua <API_KEY> pela sua chave de API Buster
     api_key = "4AAFJXPVVNYCCMA4MCN66NOEPGEQYCZT"
@@ -65,7 +63,6 @@ def resolver_captcha_buster(captcha_base64):
                 break
 
     return ""
-
 
 if __name__ == "__main__":
     main()
