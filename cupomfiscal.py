@@ -2,7 +2,6 @@ import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import requests
 
 def main():
@@ -13,7 +12,8 @@ def main():
 def abrir_site(chave_acesso):
     chrome_options = Options()
     chrome_options.add_argument("--ignore-certificate-errors")  # Ignorar erros de certificado
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+    # Substitua o caminho abaixo pelo caminho do executável do ChromeDriver em seu sistema
+    driver = webdriver.Chrome(executable_path="/caminho/para/chromedriver", options=chrome_options)
     driver.get("https://satsp.fazenda.sp.gov.br/COMSAT/Public/ConsultaPublica/ConsultaPublicaCfe.aspx")
 
     campo_chave = driver.find_element(By.ID, "conteudo_txtChaveAcesso")
